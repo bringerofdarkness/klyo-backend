@@ -1,8 +1,8 @@
 from sqlalchemy import Column, Integer, ForeignKey, Float, String
 from sqlalchemy.orm import relationship
 
-from app.db.base import Base
 
+from app.db.base import Base
 
 class Order(Base):
     __tablename__ = "orders"
@@ -11,10 +11,11 @@ class Order(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
     total_price = Column(Float, default=0)
     status = Column(String(20), default="pending", nullable=False)
+    
 
     user = relationship("User", back_populates="orders")
     items = relationship("OrderItem", back_populates="order", cascade="all, delete-orphan")
-
+    
 
 class OrderItem(Base):
     __tablename__ = "order_items"
