@@ -44,21 +44,20 @@ def get_all_orders_endpoint(
     )
     return success_response(data=orders, message="All orders fetched successfully")
     
-    orders = get_all_orders(
-    db=db,
-    status=status,
-    user_id=user_id,
-    skip=skip,
-    limit=limit,
-)
-    return success_response(data=orders, message="All orders fetched successfully")
 
 @router.get("/my")
 def get_my_orders_endpoint(
+    skip: int = 0,
+    limit: int = 10,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
-    orders = get_user_orders(db=db, user_id=current_user.id)
+    orders = get_user_orders(
+    db=db,
+    user_id=current_user.id,
+    skip=skip,
+    limit=limit,
+)
     return success_response(data=orders, message="Orders fetched successfully")
 
 

@@ -53,13 +53,21 @@ def create_order(db: Session, user_id: int, order_data: OrderCreate) -> Order:
 
     return order
 
-def get_user_orders(db: Session, user_id: int) -> list[Order]:
+def get_user_orders(
+    db: Session,
+    user_id: int,
+    skip: int = 0,
+    limit: int = 10,
+) -> list[Order]:
     from sqlalchemy.orm import joinedload
 
     return (
         db.query(Order)
         .options(joinedload(Order.items).joinedload(OrderItem.product))
         .filter(Order.user_id == user_id)
+        .order_by(Order.id.desc())
+        .offset(skip)
+        .limit(limit)
         .all()
     )
 
