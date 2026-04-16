@@ -63,14 +63,25 @@ def get_user_orders(db: Session, user_id: int) -> list[Order]:
         .all()
     )
 
-def get_all_orders(db: Session) -> list[Order]:
+def get_all_orders(
+    db: Session,
+    status: str | None = None,
+    user_id: int | None = None
+) -> list[Order]:
     from sqlalchemy.orm import joinedload
 
-    return (
+    query = (
         db.query(Order)
         .options(joinedload(Order.items).joinedload(OrderItem.product))
-        .all()
     )
+
+    if status:
+        query = query.filter(Order.status == status)
+
+    if user_id:
+        query = query.filter(Order.user_id == user_id)
+
+    return query.all()
 
 def cancel_order(db: Session, order_id: int, user_id: int) -> Order:
     order = (

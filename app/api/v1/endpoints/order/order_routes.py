@@ -28,10 +28,12 @@ def create_order_endpoint(
 
 @router.get("/")
 def get_all_orders_endpoint(
+    status: str | None = None,
+    user_id: int | None = None,
     db: Session = Depends(get_db),
     current_user=Depends(require_role("admin")),
 ):
-    orders = get_all_orders(db=db)
+    orders = get_all_orders(db=db, status=status, user_id=user_id)
     return success_response(data=orders, message="All orders fetched successfully")
 
 @router.get("/my")
