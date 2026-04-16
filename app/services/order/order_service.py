@@ -56,21 +56,28 @@ def create_order(db: Session, user_id: int, order_data: OrderCreate) -> Order:
 def get_user_orders(
     db: Session,
     user_id: int,
+    status: str | None = None,
     skip: int = 0,
     limit: int = 10,
 ) -> list[Order]:
     from sqlalchemy.orm import joinedload
 
-    return (
+    query = (
         db.query(Order)
         .options(joinedload(Order.items).joinedload(OrderItem.product))
         .filter(Order.user_id == user_id)
+    )
+
+    if status:
+        query = query.filter(Order.status == status)
+
+    return (
+        query
         .order_by(Order.id.desc())
         .offset(skip)
         .limit(limit)
         .all()
     )
-
 def get_all_orders(
     db: Session,
     status: str | None = None,
