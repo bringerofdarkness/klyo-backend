@@ -136,6 +136,10 @@ def update_order_status(db: Session, order_id: int, status: str) -> Order:
 
     order.status = status
 
+    if status == "delivered":
+        from datetime import datetime
+        order.delivered_at = datetime.utcnow()
+
     db.commit()
     db.refresh(order)
 
