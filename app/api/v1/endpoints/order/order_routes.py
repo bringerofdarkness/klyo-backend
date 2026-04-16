@@ -30,15 +30,27 @@ def create_order_endpoint(
 def get_all_orders_endpoint(
     status: str | None = None,
     user_id: int | None = None,
+    search: str | None = None,
+    sort_by: str = "id",
+    order: str = "desc",
     skip: int = 0,
     limit: int = 10,
     db: Session = Depends(get_db),
     current_user=Depends(require_role("admin")),
 ):
+    if skip < 0:
+        skip = 0
+
+    if limit > 100:
+        limit = 100
+
     orders = get_all_orders(
         db=db,
         status=status,
         user_id=user_id,
+        search=search,
+        sort_by=sort_by,
+        order=order,
         skip=skip,
         limit=limit,
     )
@@ -53,13 +65,20 @@ def get_my_orders_endpoint(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
+    if skip < 0:
+        skip = 0
+
+    if limit > 100:
+        limit = 100
+
     orders = get_user_orders(
         db=db,
         user_id=current_user.id,
         status=status,
         skip=skip,
         limit=limit,
-)
+    )
+
     return success_response(data=orders, message="Orders fetched successfully")
 
 

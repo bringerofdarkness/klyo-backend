@@ -71,17 +71,33 @@ def get_user_orders(
     if status:
         query = query.filter(Order.status == status)
 
-    return (
+    total = query.count()
+
+    items = (
         query
         .order_by(Order.id.desc())
         .offset(skip)
         .limit(limit)
         .all()
     )
+
+    return {
+        "items": items,
+        "total": total,
+        "skip": skip,
+        "limit": limit,
+        "page": (skip // limit) + 1 if limit else 1,
+        "pages": (total + limit - 1) // limit if limit else 1,
+    }
+
+
 def get_all_orders(
     db: Session,
     status: str | None = None,
     user_id: int | None = None,
+    search: str | None = None,
+    sort_by: str = "id",
+    order: str = "desc",
     skip: int = 0,
     limit: int = 10,
 ) -> list[Order]:
@@ -90,7 +106,6 @@ def get_all_orders(
     query = (
         db.query(Order)
         .options(joinedload(Order.items).joinedload(OrderItem.product))
-        .order_by(Order.id.desc())
     )
 
     if status:
@@ -99,7 +114,42 @@ def get_all_orders(
     if user_id:
         query = query.filter(Order.user_id == user_id)
 
-    return query.offset(skip).limit(limit).all()
+    if search:
+        query = (
+            query
+            .join(OrderItem, OrderItem.order_id == Order.id)
+            .join(Product, Product.id == OrderItem.product_id)
+            .filter(Product.name.ilike(f"%{search}%"))
+            .distinct()
+        )
+
+    # Sorting
+    if hasattr(Order, sort_by):
+        column = getattr(Order, sort_by)
+        if order == "desc":
+            query = query.order_by(column.desc())
+        else:
+            query = query.order_by(column.asc())
+    else:
+        query = query.order_by(Order.id.desc())
+
+    total = query.count()
+
+    items = (
+        query
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
+    return {
+        "items": items,
+        "total": total,
+        "skip": skip,
+        "limit": limit,
+        "page": (skip // limit) + 1 if limit else 1,
+        "pages": (total + limit - 1) // limit if limit else 1,
+    }
 
 def cancel_order(db: Session, order_id: int, user_id: int) -> Order:
     order = (
