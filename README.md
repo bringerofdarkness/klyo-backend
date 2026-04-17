@@ -116,7 +116,7 @@ app/
 ├── main.py
 └── alembic/
     └── versions/
-    ```
+```
 ## How to Run
 
 ```bash
