@@ -1,7 +1,7 @@
 # Klyo Backend
 
 A production-style e-commerce backend built with **FastAPI**, **PostgreSQL**, and **SQLAlchemy**.  
-This project demonstrates clean backend architecture, JWT authentication, role-based access control, inventory handling, and a complete order lifecycle.
+This project demonstrates clean backend architecture, secure JWT authentication, role-based access control (RBAC), inventory handling, and a complete order lifecycle.
 
 ## Features
 
@@ -11,42 +11,42 @@ This project demonstrates clean backend architecture, JWT authentication, role-b
 - OAuth2 password flow
 - Password hashing
 - Role-based authorization (`admin`, `customer`)
-- Get current user profile
+- Retrieve the current user profile
 - Admin-only user management
 
 ### Category Management
-- Create category
-- Update category
-- Soft delete category
-- Auto-generate slug
+- Create categories
+- Update categories
+- Soft delete categories
+- Auto-generate slugs
 - Duplicate name/slug protection
 - Active/inactive category support
-- Admin-only all-category listing
-- Category detail with nested product list
+- Admin-only full category listing
+- Category detail view with nested product list
 
 ### Product Management
-- Create product
-- Update product
-- Soft delete product
-- Product list with:
-  - pagination
-  - sorting
-  - search
-  - price filtering
-  - category filtering
-  - active/inactive filtering
-- Prevent product creation/update under inactive categories
+- Create products
+- Update products
+- Soft delete products
+- Product listing with:
+  - Pagination
+  - Sorting
+  - Search
+  - Price filtering
+  - Category filtering
+  - Active/inactive filtering
+- Prevent product creation or update under inactive categories
 - Hide products from inactive categories by default
-- Optional admin visibility for inactive-category products
+- Optional admin visibility for products under inactive categories
 
 ### Order Management
-- Create order
+- Create orders
 - Multi-item order support
 - Stock validation before order creation
 - Automatic stock deduction
-- View customer’s own orders
+- View a customer’s own orders
 - Admin view of all orders
-- Cancel order with stock restoration
+- Cancel orders with stock restoration
 - Order status management
 - Admin-only order status updates
 - Supported statuses:
@@ -74,6 +74,7 @@ app/
 │   ├── deps.py
 │   └── v1/
 │       ├── endpoints/
+│       │   ├── health.py
 │       │   ├── user/
 │       │   │   └── user_routes.py
 │       │   ├── product/
@@ -90,22 +91,36 @@ app/
 │   └── response.py
 ├── db/
 │   ├── base.py
-│   ├── session.py
-│   └── dependencies.py
+│   ├── base_class.py
+│   ├── dependencies.py
+│   ├── models.py
+│   └── session.py
 ├── models/
 │   ├── user.py
 │   ├── category.py
 │   ├── product.py
 │   └── order.py
 ├── schemas/
+│   ├── health.py
 │   ├── user/
 │   ├── category/
 │   ├── product/
 │   ├── order/
 │   └── common.py
 ├── services/
+│   ├── hello_service.py
 │   ├── user/
 │   ├── category/
 │   ├── product/
 │   └── order/
-└── main.py
+├── main.py
+└── alembic/
+    └── versions/
+    
+
+## How to Run
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
