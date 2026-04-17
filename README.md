@@ -1,0 +1,111 @@
+# Klyo Backend
+
+A production-style e-commerce backend built with **FastAPI**, **PostgreSQL**, and **SQLAlchemy**.  
+This project demonstrates clean backend architecture, JWT authentication, role-based access control, inventory handling, and a complete order lifecycle.
+
+## Features
+
+### Authentication & User Management
+- User registration
+- JWT-based login
+- OAuth2 password flow
+- Password hashing
+- Role-based authorization (`admin`, `customer`)
+- Get current user profile
+- Admin-only user management
+
+### Category Management
+- Create category
+- Update category
+- Soft delete category
+- Auto-generate slug
+- Duplicate name/slug protection
+- Active/inactive category support
+- Admin-only all-category listing
+- Category detail with nested product list
+
+### Product Management
+- Create product
+- Update product
+- Soft delete product
+- Product list with:
+  - pagination
+  - sorting
+  - search
+  - price filtering
+  - category filtering
+  - active/inactive filtering
+- Prevent product creation/update under inactive categories
+- Hide products from inactive categories by default
+- Optional admin visibility for inactive-category products
+
+### Order Management
+- Create order
+- Multi-item order support
+- Stock validation before order creation
+- Automatic stock deduction
+- View customer’s own orders
+- Admin view of all orders
+- Cancel order with stock restoration
+- Order status management
+- Admin-only order status updates
+- Supported statuses:
+  - `pending`
+  - `shipped`
+  - `delivered`
+  - `cancelled`
+
+## Tech Stack
+
+- **FastAPI**
+- **PostgreSQL**
+- **SQLAlchemy ORM**
+- **Pydantic**
+- **JWT Authentication**
+- **OAuth2PasswordBearer**
+- **Passlib**
+- **Uvicorn**
+
+## Project Structure
+
+```bash
+app/
+├── api/
+│   ├── deps.py
+│   └── v1/
+│       ├── endpoints/
+│       │   ├── user/
+│       │   │   └── user_routes.py
+│       │   ├── product/
+│       │   │   └── product_routes.py
+│       │   ├── category/
+│       │   │   └── category_routes.py
+│       │   └── order/
+│       │       └── order_routes.py
+│       └── router.py
+├── core/
+│   ├── config.py
+│   ├── security.py
+│   ├── permissions.py
+│   └── response.py
+├── db/
+│   ├── base.py
+│   ├── session.py
+│   └── dependencies.py
+├── models/
+│   ├── user.py
+│   ├── category.py
+│   ├── product.py
+│   └── order.py
+├── schemas/
+│   ├── user/
+│   ├── category/
+│   ├── product/
+│   ├── order/
+│   └── common.py
+├── services/
+│   ├── user/
+│   ├── category/
+│   ├── product/
+│   └── order/
+└── main.py
