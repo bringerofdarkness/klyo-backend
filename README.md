@@ -118,9 +118,19 @@ app/
     └── versions/
     
 
+
 ## How to Run
 
 Install dependencies:
 
 ```bash
 pip install -r requirements.txt
+
+
+
+
+
+```markdown
+## Environment Setup
+
+Create a `.env` file based on `.env.example`.
