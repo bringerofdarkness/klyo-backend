@@ -122,6 +122,8 @@ app/
 ```bash
 pip install -r requirements.txt
 uvicorn app.main:app --reload
+
+Access API docs at: http://127.0.0.1:8000/docs
 ```
 
 
@@ -131,3 +133,9 @@ uvicorn app.main:app --reload
 ## Environment Setup
 
 Create a `.env` file based on `.env.example`.
+
+## Project Status
+
+- Backend: ~90% complete  
+- Frontend: In progress  
+- Payment integration: Planned  
