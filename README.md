@@ -127,7 +127,7 @@ uvicorn app.main:app --reload
 
 
 
-```markdown
+
 ## Environment Setup
 
 Create a `.env` file based on `.env.example`.
